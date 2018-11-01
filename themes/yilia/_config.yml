@@ -6,18 +6,18 @@ menu:
 
 # SubNav
 subnav:
-  github: "#"
-  weibo: "#"
-  rss: "#"
-  zhihu: "#"
-  #qq: "#"
+  #github: "https://github.com/fanhq"
+  # weibo: "#"
+  # rss: "#"
+  # zhihu: "#"
+  #qq: "944080287"
   #weixin: "#"
   #jianshu: "#"
   #douban: "#"
   #segmentfault: "#"
   #bilibili: "#"
   #acfun: "#"
-  #mail: "mailto:litten225@qq.com"
+  #mail: "944080287@qq.com"
   #facebook: "#"
   #google: "#"
   #twitter: "#"
@@ -120,11 +120,6 @@ smart_menu:
   aboutme: '关于我'
 
 friends:
-  友情链接1: http://localhost:4000/
-  友情链接2: http://localhost:4000/
-  友情链接3: http://localhost:4000/
-  友情链接4: http://localhost:4000/
-  友情链接5: http://localhost:4000/
-  友情链接6: http://localhost:4000/
+   Github: https://github.com/fanhq
 
 aboutme: 很惭愧<br><br>只做了一点微小的工作<br>谢谢大家

@@ -2,8 +2,8 @@
 title: docker常用命令
 date: 2018-11-02 14:18:32
 tags:
-    -docker
-    -常用命令
+    - docker
+    - 常用命令
 ---
 
 * 查看docker版本信息  

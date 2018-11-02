@@ -6,8 +6,6 @@ tags:
     -常用命令
 ---
 
-### docker常用命令
-
 * 查看docker版本信息  
 docker version 
 

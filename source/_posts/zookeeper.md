@@ -187,3 +187,43 @@ ZooKeeper可以理解为类似redis的缓存数据库，只是相对于redis存�
      3. 服务器3启动，给自己投票，同时与之前启动的服务器1,2交换信息，由于服务器3的编号最大所以服务器3胜出，此时投票数正好大于半数，所以服务器3成为领导者，服务器1,2成为小弟
      4.  服务器4启动，给自己投票，同时与之前启动的服务器1,2,3交换信息，尽管服务器4的编号大，但之前服务器3已经胜出，所以服务器4只能成为小弟
      5. 服务器5启动，后面的逻辑同服务器4成为小弟
+
+
++ zookeeper 分布式锁应用
+
+    * zookeeper特性
+        1. 有序节点：假如当前有一个父节点为/lock，我们可以在这个父节点下面创建子节点；zookeeper提供了一个可选的有序特性，例如我们可以创建子节点“/lock/node-”并且指明有序，那么zookeeper在生成子节点时会根据当前的子节点数量自动添加整数序号，也就是说如果是第一个创建的子节点，那么生成的子节点为/lock/node-0000000000，下一个节点则为/lock/node-0000000001，依次类推。
+        2. 临时节点：客户端可以建立一个临时节点，在会话结束或者会话超时后，zookeeper会自动删除该节点。
+        3. 事件监听：在读取数据时，我们可以同时对节点设置事件监听，当节点数据或结构变化时，zookeeper会通知客户端。当前zookeeper有如下四种事件：1）节点创建；2）节点删除；3）节点数据修改；4）子节点变更
+   
+    * 分布式锁原理
+        1. 客户端连接zookeeper，并在/lock下创建临时的且有序的子节点，第一个客户端对应的子节点为/lock/lock-0000000000，第二个为/lock/lock-0000000001，以此类推。
+        2. 客户端获取/lock下的子节点列表，判断自己创建的子节点是否为当前子节点列表中序号最小的子节点，如果是则认为获得锁，否则监听刚好在自己之前一位的子节点删除消息，获得子节点变更通知后重复此步骤直至获得锁；
+        3. 执行业务代码；
+        4. 完成业务流程后，删除对应的子节点释放锁
+
+    * 基于Curator分布式锁代码展示
+
+    ```
+    //创建客户端
+    RetryPolicy retryPolicy = new ExponentialBackoffRetry(1000, 3);
+    CuratorFramework client =
+            CuratorFrameworkFactory.builder()
+                    .connectString("127.0.0.1:2181")
+                    .sessionTimeoutMs(5000)
+                    .connectionTimeoutMs(5000)
+                    .retryPolicy(retryPolicy)
+                    .build();
+    client.start();
+    //创建分布式锁, 锁空间的根节点路径为/curator/lock
+    InterProcessMutex mutex = new InterProcessMutex(client, "/curator/lock");
+    mutex.acquire();
+    //获得了锁, 进行业务流程
+    //todo
+    //完成业务流程, 释放锁
+    mutex.release();
+    
+    //关闭客户端
+    client.close();
+
+    ```

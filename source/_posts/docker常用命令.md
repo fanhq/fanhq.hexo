@@ -60,17 +60,13 @@ docker exec -it [CONTAINER_NAME or CONTAINER_ID] /bin/bash
 * 启动spring boot web应用(需要先安装好jdk环境)  
 java -jar sboot.jar  
 启动后理论上就可以访问了，但是由于外部端口不能直接访问，所以需要宿主机将外部端口与docker绑定后才能访问 
-1. 提交准备好的环境 
+1. 提交准备好的环境  
 docker commit 57c312bbaad1 fanhq/javaweb:0.1  
-
 2. 通过绑定端口的方式启动doker  
 docker run -t -i -p 58080:8080 –name springboot(自定义别名)  fanhq/javaweb:0.1 /bin/bash  
-
 3. 进入doker后启动项目  
 java -jar sboot.jar 
-
-4. 访问http://192.168.65.132:58080/（ip为虚拟机的Ip）
-
+4. 访问"http://192.168.65.132:58080/"（ip为虚拟机的Ip）
 * 在docker中安装开发环境 
 1. 首先要安装vi指令或vim指令用于编辑环境变量文件，也可以不用安装，可将docker容器中的文件复制到宿主机上修改  
 vi指令安装  

@@ -20,6 +20,7 @@ solr-7.5.0.zip
 ~$ cd solr-7.5.0/
 
 ```
+<!-- more -->
 + 启动solr  
    Unix or MacOS:
     ``` shell

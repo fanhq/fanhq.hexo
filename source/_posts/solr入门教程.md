@@ -123,7 +123,7 @@ solr-7.5.0.zip
 
    SolrCloud example running, please visit: http://localhost:8983/solr
   ```
-  至此，solrc创建techproduct 索引已经完成，可以访问solr的管理界面[http://localhost:8983/solr](http://localhost:8983/solr)，接下来可以向solr添加需要搜索的数据，生成反向索引数据
+  至此，solr创建techproduct已经完成，可以访问solr的管理界面[http://localhost:8983/solr](http://localhost:8983/solr)，接下来可以向solr添加需要搜索的数据
 
   Linux/Mac:  
   ```

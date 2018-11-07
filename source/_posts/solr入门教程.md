@@ -68,6 +68,7 @@ solr-7.5.0.zip
 
     INFO  - 2017-07-27 12:28:02.835; org.apache.solr.client.solrj.impl.ZkClientClusterStateProvider; Cluster at localhost:9983 ready
   ```
+### 创建collection
   这个时候，一个两个节点的solr集群就已经启动完成，solr依靠zookeeper协调管理各个节点，solr会默认启动一个嵌套的zookeeper,启动完成后，会提示你创建集合，熟悉lucene的可以理解文创建document，用来创建数据的索引
   ```
    Now let's create a new collection for indexing documents in your 2-node cluster.
@@ -166,7 +167,7 @@ solr-7.5.0.zip
   ```
   到这里，我们的solr加入了分析的数据，并且solr会根据文件的特性，生成默认的field
 
-+ 小试牛刀
+### 小试牛刀
 
    solr提供界面进行搜索，操作简单，同事提供接口对外进行搜索，这里展示接口的方式搜索
 

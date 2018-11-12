@@ -67,7 +67,7 @@ docker run -t -i -p 58080:8080 –name springboot(自定义别名)  fanhq/javawe
 3. 进入doker后启动项目  
 java -jar sboot.jar 
 4. 访问"http://192.168.65.132:58080/"（ip为虚拟机的Ip）
-* 在docker中安装开发环境 
+* 在docker中部署环境，以springboot的应用为例
 1. 首先要安装vi指令或vim指令用于编辑环境变量文件，也可以不用安装，可将docker容器中的文件复制到宿主机上修改  
 vi指令安装  
 apt-get install vi  

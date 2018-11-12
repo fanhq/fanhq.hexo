@@ -151,82 +151,79 @@ VOLUME ["${NGINX_SITECONF_DIR}"]
 ENTRYPOINT ["/sbin/entrypoint.sh"]
 CMD ["/usr/sbin/nginx"]
 ```
+* Docker Compose  
+    - 示例
+    ``` shell
+    version: '2'
+    services:
+            db:
+                    image: mysql:5.7
+                    volumes: 
+                            - "./.data/db:/var/lib/mysql"
+                    restart: always
+                    environment:
+                            MYSQL_ROOT_PASSWORD: wordpress
+                            MYSQL_DATABASE: wordpress
+                            MYSQL_USER: wordpress
+                            MYSQL_PASSWORD: wordpress
 
-* Docker Compose 
-1. 示例
-``` shell
-version: '2'
-services:
-        db:
-                image: mysql:5.7
-                volumes: 
-                        - "./.data/db:/var/lib/mysql"
-                restart: always
-                environment:
-                        MYSQL_ROOT_PASSWORD: wordpress
-                        MYSQL_DATABASE: wordpress
-                        MYSQL_USER: wordpress
-                        MYSQL_PASSWORD: wordpress
+            wordpress:
+                    depends_on: 
+                            - db
+                    image: wordpress:latest
+                    links:
+                            - db
+                    ports:
+                            - "80:80"
+                    restart: always
+                    environment:
+                            WORDPRESS_DB_HOST: db:3306
+                            WORDPRESS_DB_PASSWORD: wordpress
+    ```
+    - 命令
+    ``` shell
+    #查看帮助
+    docker-compose -h
 
-        wordpress:
-                depends_on: 
-                        - db
-                image: wordpress:latest
-                links:
-                        - db
-                ports:
-                        - "80:80"
-                restart: always
-                environment:
-                        WORDPRESS_DB_HOST: db:3306
-                        WORDPRESS_DB_PASSWORD: wordpress
+    # -f  指定使用的 Compose 模板文件，默认为 docker-compose.yml，可以多次指定。
+    docker-compose -f docker-compose.yml up -d 
 
+    #启动所有容器，-d 将会在后台启动并运行所有的容器
+    #默认解析当前目录的docker-compose.yml文件
+    docker-compose up -d
 
-```
-2. 命令
-``` shell
-#查看帮助
-docker-compose -h
+    #停用移除所有容器以及网络相关
+    docker-compose down
 
-# -f  指定使用的 Compose 模板文件，默认为 docker-compose.yml，可以多次指定。
-docker-compose -f docker-compose.yml up -d 
+    #查看服务容器的输出
+    docker-compose logs
 
-#启动所有容器，-d 将会在后台启动并运行所有的容器
-#默认解析当前目录的docker-compose.yml文件
-docker-compose up -d
+    #列出项目中目前的所有容器
+    docker-compose ps
 
-#停用移除所有容器以及网络相关
-docker-compose down
+    #构建（重新构建）项目中的服务容器。服务容器一旦构建后，将会带上一个标记名，例如对于 web 项目中的一个 db 容器，可能是 web_db。可以随时在项目目录下运行 docker-compose build 来重新构建服务
+    docker-compose build
 
-#查看服务容器的输出
-docker-compose logs
+    #拉取服务依赖的镜像
+    docker-compose pull
 
-#列出项目中目前的所有容器
-docker-compose ps
+    #重启项目中的服务
+    docker-compose restart
 
-#构建（重新构建）项目中的服务容器。服务容器一旦构建后，将会带上一个标记名，例如对于 web 项目中的一个 db 容器，可能是 web_db。可以随时在项目目录下运行 docker-compose build 来重新构建服务
-docker-compose build
+    #删除所有（停止状态的）服务容器。推荐先执行 docker-compose stop 命令来停止容器。
+    docker-compose rm 
 
-#拉取服务依赖的镜像
-docker-compose pull
+    #在指定服务上执行一个命令。
+    docker-compose run ubuntu ping docker.com
 
-#重启项目中的服务
-docker-compose restart
+    #设置指定服务运行的容器个数。通过 service=num 的参数来设置数量
+    docker-compose scale web=3 db=2
 
-#删除所有（停止状态的）服务容器。推荐先执行 docker-compose stop 命令来停止容器。
-docker-compose rm 
+    #启动已经存在的服务容器。
+    docker-compose start
 
-#在指定服务上执行一个命令。
-docker-compose run ubuntu ping docker.com
-
-#设置指定服务运行的容器个数。通过 service=num 的参数来设置数量
-docker-compose scale web=3 db=2
-
-#启动已经存在的服务容器。
-docker-compose start
-
-#停止已经处于运行状态的容器，但不删除它。通过 docker-compose start 可以再次启动这些容器。
-docker-compose stop
+    #停止已经处于运行状态的容器，但不删除它。通过 docker-compose start 可以再次启动这些容器。
+    docker-compose stop
 
 
-```
+    ```

@@ -105,16 +105,52 @@ docker run -d -p 58080:8080 fanhq/javaweb:0.1 /bin/bash
 8. 进入容器后重新运行第5步的启动项目，然后通过外部端口访问 
 http://192.168.65.132:58080/   
 至此，一个手动版的doker部署就搞定了，下一步是自动化发布启动doker。
-使用dockerfile来创建镜像，建议这种方式生成容器，便于管理
 
-* 文档内容 
-FROM bootrun  
-ENV JAVA_HOME /opt/jdk   
-ENV PATH JAVAHOME/bin:PATH  
-ENV CLASSPATH .:$JAVA_HOME/lib  
-#COPY /Users/wangchun/Desktop/sboot.jar /sboot.jar 
-EXPOSE 8080  
-ENTRYPOINT java -jar /sboot.jar && /bin/bash 
+* Dockerfile 示例
+``` shell
+# 指定基础镜像
+FROM sameersbn/ubuntu:14.04.20161014
 
-* 设置 
-docker build -t=”redstarofsleep/javaweb” .
+# 维护者信息
+MAINTAINER sameer@damagehead.com
+
+# 设置环境
+ENV RTMP_VERSION=1.1.10 \
+NPS_VERSION=1.11.33.4 \
+LIBAV_VERSION=11.8 \
+NGINX_VERSION=1.10.1 \
+NGINX_USER=www-data \
+NGINX_SITECONF_DIR=/etc/nginx/sites-enabled \
+NGINX_LOG_DIR=/var/log/nginx \
+NGINX_TEMP_DIR=/var/lib/nginx \
+NGINX_SETUP_DIR=/var/cache/nginx
+
+# 设置构建时变量，镜像建立完成后就失效
+ARG BUILD_LIBAV=false
+ARG WITH_DEBUG=false
+ARG WITH_PAGESPEED=true
+ARG WITH_RTMP=true
+
+# 复制本地文件到容器目录中
+COPY setup/ ${NGINX_SETUP_DIR}/
+RUN bash ${NGINX_SETUP_DIR}/install.sh
+
+# 复制本地配置文件到容器目录中
+COPY nginx.conf /etc/nginx/nginx.conf
+COPY entrypoint.sh /sbin/entrypoint.sh
+
+# 运行指令
+RUN chmod 755 /sbin/entrypoint.sh
+
+# 允许指定的端口
+EXPOSE 80/tcp 443/tcp 1935/tcp
+
+# 指定网站目录挂载点
+VOLUME ["${NGINX_SITECONF_DIR}"]
+
+ENTRYPOINT ["/sbin/entrypoint.sh"]
+CMD ["/usr/sbin/nginx"]
+
+
+```
+

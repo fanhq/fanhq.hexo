@@ -39,7 +39,7 @@ docker rm container_name
 docker rm $(docker ps -a -q) 
 
 * 删除镜像  
-docker rm ubuntu:v1  
+docker rmi ubuntu:v1  
 
 * 修改镜像标签名  
 docker tag old-image[:old-tag] new-image[:new-tag]  

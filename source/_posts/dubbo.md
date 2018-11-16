@@ -99,7 +99,7 @@ dubbo支持很多种注册中心，如multicast、redis、zookeeper等，目前�
         ```    
         注意这里的@service注解是com.alibaba.dubbo.config.annotation.Service
 * 消费者测试    
-这里在消费者项目里面创建单元测试进行测试
+    这里在消费者项目里面创建单元测试进行测试  
     + 项目结构
         ```
         dubbo-consumer
@@ -111,7 +111,7 @@ dubbo支持很多种注册中心，如multicast、redis、zookeeper等，目前�
                     |--test
                         |--com.fanhq.dubbo.consumer 
             |--pom   
-        ```
+       ```
     + 消费项目配置
         ``` java
         @Configuration

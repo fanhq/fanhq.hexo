@@ -101,12 +101,12 @@ dubbo支持很多种注册中心，如multicast、redis、zookeeper等，目前�
 * 消费者测试    
 这里在消费者项目里面创建单元测试进行测试
     + 项目结构
-         ```
-        dubbo-provider
+        ```
+        dubbo-consumer
             |--src
                 |--main
                     |--java
-                        |--com.fanhq.dubbo.provider
+                        |--com.fanhq.dubbo.consumer
                             |--config
                     |--test
                         |--com.fanhq.dubbo.consumer 

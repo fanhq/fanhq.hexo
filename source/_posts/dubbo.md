@@ -23,6 +23,7 @@ springboot-dubbo
     |--dubbo-provider //服务提供者
     |--pom
 ```
+<!-- more -->
 * 提前准备  
 dubbo支持很多种注册中心，如multicast、redis、zookeeper等，目前使用较多的是zookeeper，官网也强力推荐。本文也是使用zookeeper作为dubbo的注册中心，这里不再展示zookeeper的安装过程，zookeeper的版本为3.4.12,dubbo的版本为最新的
     ``` 

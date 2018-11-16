@@ -53,7 +53,7 @@ dubbo支持很多种注册中心，如multicast、redis、zookeeper等，目前�
 
 * 服务提供创建
     + 项目结构
-         ```
+        ```
         dubbo-provider
             |--src
                 |--main

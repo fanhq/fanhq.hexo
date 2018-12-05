@@ -155,7 +155,7 @@ Message Buffer是指protobuf序列化后的二进制文件格式如下：
                         </goals>
                     </execution>
                 </executions>
-        </plugin>
+         </plugin>
     ```
 
 ### 附

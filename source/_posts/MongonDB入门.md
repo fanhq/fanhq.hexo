@@ -20,7 +20,7 @@ MongoDB 是一个基于分布式文件存储的数据库。由C++语言编写。
 + field 数据库字段，和关系型数据一样
 
 ### MongonDB使用
-
+<!-- more -->
 + springboot
 
     * 添加pom依赖
@@ -95,3 +95,7 @@ MongoDB 是一个基于分布式文件存储的数据库。由C++语言编写。
 
     }
     ```
+
+### 附录
+
++ [Spring Data MongoDB - Reference Documentation](https://docs.spring.io/spring-data/mongodb/docs/2.1.x-SNAPSHOT/reference/html/)

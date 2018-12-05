@@ -50,18 +50,114 @@ Message Buffer是指protobuf序列化后的二进制文件格式如下：
         return (fieldNumber << TAG_TYPE_BITS) | wireType;
     }
     ```
-    TAG_TYPE_BITS取值为3，也就是低位为wire_type，高位为field_number
+    TAG_TYPE_BITS取值为3，也就是低位为wire_type，高位为field_number，举例说明：age声明为int32，age的field_number=1，所以wire_type =0,所以key=（1<<3 | 0 ）=0x08
 
-    * 小试牛刀
-        protobuf文件如下：
-        ```
-        syntax ="proto3";
-        package com.simple;
-        option java_package="com.simple";
-        option java_outer_classname="Person";
-        message Person{
-            int32 age= 1;
+### protobuf序列化
++ protobuf文件
+    ```
+            syntax ="proto3";
+            package com.simple;
+            option java_package="com.simple";
+            option java_outer_classname="Person";
+            message Person{
+                int32 age= 1;
+            }
+
+    ```
+
++ 序列化
+    ``` java
+    Person.Builder builder = Person.newBuilder();
+    builder.setAge(18);
+    Person person =builder.build();
+    byte[] byteArray = person.toByteArray();
+    FileOutputStream outstream = new FileOutputStream(new File("Person.txt"));
+    outstream.write(byteArray);
+    outstream.close();
+    ```
+    打开Person.txt，使用十六进制查看：08 12
+
+### grpc应用
+
++ 概要  
+
+    protobuf提供了maven插件，可以利用插件生成对应的文件，如Java，可以生成对应的Java类，具体使用方法，这里不再累赘介绍
+
++ protobuf文件
+    ``` 
+        syntax = "proto3";
+        option java_multiple_files = true;
+        option java_package = "io.grpc.examples.helloworld";
+        option java_outer_classname = "HelloWorldProto";
+        option objc_class_prefix = "HLW";
+
+        package helloworld;
+
+        // The greeting service definition.
+        service Greeter {
+        // Sends a greeting
+        rpc SayHello (HelloRequest) returns (HelloReply) {}
         }
 
-        ```
-        age声明为int32，所以wire_type =0,所以key=（1<<3 | 0 ）=0x08
+        // The request message containing the user's name.
+        message HelloRequest {
+        string name = 1;
+        }
+
+        // The response message containing the greetings
+        message HelloReply {
+        string message = 1;
+        }
+    ```
++ maven依赖
+    ```
+         <dependency>
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-netty-shaded</artifactId>
+            <version>${grpc.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-protobuf</artifactId>
+            <version>${grpc.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-stub</artifactId>
+            <version>${grpc.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java</artifactId>
+            <version>3.5.0</version>
+        </dependency>
+    ```
+
++ maven配置protobuf插件  
+    ```
+        <!-- protobuf 编译组件 -->
+         <plugin>
+                <groupId>org.xolstice.maven.plugins</groupId>
+                <artifactId>protobuf-maven-plugin</artifactId>
+                <version>0.5.1</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <pluginId>grpc-java</pluginId>
+                    <protocArtifact>com.google.protobuf:protoc:3.5.0:exe:${os.detected.classifier}</protocArtifact>
+                    <pluginArtifact>io.grpc:protoc-gen-grpc-java:1.16.1:exe:${os.detected.classifier}</pluginArtifact>
+                    <protoSourceRoot>${project.basedir}/src/main/resources/proto</protoSourceRoot>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>compile</goal>
+                            <goal>compile-custom</goal>
+                        </goals>
+                    </execution>
+                </executions>
+        </plugin>
+    ```
+
+### 附
++ [grpc官网地址](https://grpc.io/about/)
++ [protobuf官网地址](https://developers.google.com/protocol-buffers/)

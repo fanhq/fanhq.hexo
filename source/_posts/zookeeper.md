@@ -59,7 +59,7 @@ ZooKeeper可以理解为类似redis的缓存数据库，只是相对于redis存�
   ZooKeeper原生支持通过注册Watcher来进行事件监听，但是其使用并不是特别方便，需要开发人员自己反复注册Watcher，比较繁琐。Curator引入了Cache来实现对ZooKeeper服务端事件的监听。Cache是Curator中对事件监听的包装，其对事件的监听其实可以近似看作是一个本地缓存视图和远程ZooKeeper视图的对比过程。同时Curator能够自动为开发人员处理反复注册监听，从而大大简化了原生API开发的繁琐过程
   
   * 事件监听示例代码
-    ```
+    ``` java
     
     private static final String PATH_CACHE = "/example/pathCache";
 
@@ -204,7 +204,7 @@ ZooKeeper可以理解为类似redis的缓存数据库，只是相对于redis存�
 
     * 基于Curator分布式锁代码展示
 
-    ```
+    ``` java
     //创建客户端
     RetryPolicy retryPolicy = new ExponentialBackoffRetry(1000, 3);
     CuratorFramework client =

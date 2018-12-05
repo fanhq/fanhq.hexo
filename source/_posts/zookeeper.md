@@ -22,18 +22,19 @@ ZooKeeper可以理解为类似redis的缓存数据库，只是相对于redis存�
 
 + Curator常用api  
   * 创建客户端  
-    ```
+    ``` java
     RetryPolicy retryPolicy = new ExponentialBackoffRetry(1000, 3);
     CuratorFramework client = CuratorFrameworkFactory.builder()
-                                .connectString("127.0.0.1:2181")
-                                .sessionTimeoutMs(5000)
-                                .connectionTimeoutMs(5000)
-                                .retryPolicy(retryPolicy)
-                                .build();
+                            .connectString("127.0.0.1:2181")
+                            .sessionTimeoutMs(5000)
+                            .connectionTimeoutMs(5000)
+                            .retryPolicy(retryPolicy)
+                            .build();
     client.start();
     ```
   * 创建节点数据  
-    ```//创建节点
+    ``` java
+       //创建节点
        //PERSISTENT：持久化 默认模式
        //PERSISTENT_SEQUENTIAL：持久化并且带序列号
        //EPHEMERAL：临时
@@ -42,15 +43,15 @@ ZooKeeper可以理解为类似redis的缓存数据库，只是相对于redis存�
        client.create().creatingParentsIfNeeded().withMode(CreateMode.PERSISTENT).forPath("/data/path", "hello".getBytes());
     ```
   * 删除节点数据  
-    ```
+    ``` java
     client.delete().deletingChildrenIfNeeded().forPath("/data/path");
     ```
   * 更新节点数据
-    ```
+    ``` java
      client.setData().forPath("/data/path", "world".getBytes());
     ```
   * 查询节点数据
-    ```
+    ``` java
     byte[] data = client.getData().forPath("/data/path");//获取指定节点数据
     List<String> childs = client.getChildren().forPath("/")//获取子节点
     ```

@@ -136,7 +136,7 @@ Message Buffer是指protobuf序列化后的二进制文件格式如下：
 + maven配置protobuf插件  
     ```
         <!-- protobuf 编译组件 -->
-         <plugin>
+        <plugin>
                 <groupId>org.xolstice.maven.plugins</groupId>
                 <artifactId>protobuf-maven-plugin</artifactId>
                 <version>0.5.1</version>

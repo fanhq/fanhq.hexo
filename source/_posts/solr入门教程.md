@@ -1,5 +1,5 @@
 ---
-title: solr入门教程
+title: Solr入门教程
 date: 2018-11-07 14:34:18
 tags:
     - solr

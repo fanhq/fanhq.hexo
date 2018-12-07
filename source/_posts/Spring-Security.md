@@ -166,16 +166,186 @@ tags:
 	}
 ```
 
-### Spring Security 认证流程
+### Spring Security 启动流程
 
-+ 用户使用用户名和密码登录  
++ @EnableWebSecurity注解配置启动spring secuiry,导入WebSecurityConfiguration配置
+``` java 
+	@Retention(value = java.lang.annotation.RetentionPolicy.RUNTIME)
+	@Target(value = { java.lang.annotation.ElementType.TYPE })
+	@Documented
+	@Import({ WebSecurityConfiguration.class,
+			SpringWebMvcImportSelector.class })
+	@EnableGlobalAuthentication
+	@Configuration
+	public @interface EnableWebSecurity {
 
-+ 用户名密码被过滤器（默认为 UsernamePasswordAuthenticationFilter）获取到，配合其他权限信息（自定义），根据UsernamePasswordAuthenticationToken封装成一个未认证的Authentication（处在securityContext中）
+		/**
+		* Controls debugging support for Spring Security. Default is false.
+		* @return if true, enables debug support with Spring Security
+		*/
+		boolean debug() default false;
+	}
+```
 
-+ Token（Authentication实现类）传递给 AuthenticationManager 进行认证
++ WebSecurityConfiguration初始化WebSecurity，springSecurityFilterChain调用WebSecurity的build方法初始化各个Filter
+``` java
+@Bean(name = AbstractSecurityWebApplicationInitializer.DEFAULT_FILTER_NAME)
+	public Filter springSecurityFilterChain() throws Exception {
+		boolean hasConfigurers = webSecurityConfigurers != null
+				&& !webSecurityConfigurers.isEmpty();
+		if (!hasConfigurers) {
+			WebSecurityConfigurerAdapter adapter = objectObjectPostProcessor
+					.postProcess(new WebSecurityConfigurerAdapter() {
+					});
+			webSecurity.apply(adapter);
+		}
+		return webSecurity.build();
+	}
 
-+ AuthenticationManager管理一系列的AuthenticationProvider，AuthenticationManager会遍历全部AuthenticationProvider去对Authentication进行认证
+```
 
-+ AuthenticationProvider会调用userDetailService去数据库中验证用户信息 ,返回一个userDetail对象（可自定义），认证成功后返回一个封装了用户权限信息的，以UsernamePasswordAuthenticationToken实现的带用户名和密码以及权限的Authentication 对象
++ webSecurity的build方法调用dobuild方法初始化，doBuild方法调用AbstractConfiguredSecurityBuilder的init方法
+``` java 
+	public final O build() throws Exception {
+		if (this.building.compareAndSet(false, true)) {
+			this.object = doBuild();
+			return this.object;
+		}
+		throw new AlreadyBuiltException("This object has already been built");
+	}
 
-+ 已经进行认证的Authentication返回到UsernamePasswordAuthenticationFilter中，如果验证失败，则进入unsuccessfulAuthentication;如果验证成功，则进入successfulAuthentication进行生成token
+	@Override
+	protected final O doBuild() throws Exception {
+		synchronized (configurers) {
+			buildState = BuildState.INITIALIZING;
+
+			beforeInit();
+			init();
+
+			buildState = BuildState.CONFIGURING;
+
+			beforeConfigure();
+			configure();
+
+			buildState = BuildState.BUILDING;
+
+			O result = performBuild();
+
+			buildState = BuildState.BUILT;
+
+			return result;
+		}
+	}
+
+```
+
++ AbstractConfiguredSecurityBuilder的init方法先去获取WebSecurityConfigurerAdapter，再调用WebSecurityConfigurerAdapter的init方法
+``` java 
+private void init() throws Exception {
+		Collection<SecurityConfigurer<O, B>> configurers = getConfigurers();
+
+		for (SecurityConfigurer<O, B> configurer : configurers) {
+			configurer.init((B) this);
+		}
+
+		for (SecurityConfigurer<O, B> configurer : configurersAddedInInitializing) {
+			configurer.init((B) this);
+		}
+	}
+```
+
++ WebSecurityConfigurerAdapter的init方法调用WebSecurityConfigurerAdapter的getHttp方法，创建HttpSecurity,HttpSecurity管理这各个XXXConfigurer,XXXConfigurer配置不同的过滤器
+``` java 
+public void init(final WebSecurity web) throws Exception {
+		final HttpSecurity http = getHttp();
+		web.addSecurityFilterChainBuilder(http).postBuildAction(new Runnable() {
+			public void run() {
+				FilterSecurityInterceptor securityInterceptor = http
+						.getSharedObject(FilterSecurityInterceptor.class);
+				web.securityInterceptor(securityInterceptor);
+			}
+		});
+}
+
+protected final HttpSecurity getHttp() throws Exception {
+		if (http != null) {
+			return http;
+		}
+
+		DefaultAuthenticationEventPublisher eventPublisher = objectPostProcessor
+				.postProcess(new DefaultAuthenticationEventPublisher());
+		localConfigureAuthenticationBldr.authenticationEventPublisher(eventPublisher);
+
+		AuthenticationManager authenticationManager = authenticationManager();
+		authenticationBuilder.parentAuthenticationManager(authenticationManager);
+		Map<Class<? extends Object>, Object> sharedObjects = createSharedObjects();
+
+		http = new HttpSecurity(objectPostProcessor, authenticationBuilder,
+				sharedObjects);
+		if (!disableDefaults) {
+			// @formatter:off
+			http
+				.csrf().and()
+				.addFilter(new WebAsyncManagerIntegrationFilter())
+				.exceptionHandling().and()
+				.headers().and()
+				.sessionManagement().and()
+				.securityContext().and()
+				.requestCache().and()
+				.anonymous().and()
+				.servletApi().and()
+				.apply(new DefaultLoginPageConfigurer<>()).and()
+				.logout();
+			// @formatter:on
+			ClassLoader classLoader = this.context.getClassLoader();
+			List<AbstractHttpConfigurer> defaultHttpConfigurers =
+					SpringFactoriesLoader.loadFactories(AbstractHttpConfigurer.class, classLoader);
+
+			for(AbstractHttpConfigurer configurer : defaultHttpConfigurers) {
+				http.apply(configurer);
+			}
+		}
+		configure(http);
+		return http;
+}
+```
+
++ getHttp方法除了自己会创建默认的一些XXXconfigurer,也会去创建我们自定义的configurer，最终将各个XXXconfigurer添加到configurersAddedInInitializing中
+``` java 
+private <C extends SecurityConfigurer<O, B>> void add(C configurer) throws Exception {
+		Assert.notNull(configurer, "configurer cannot be null");
+
+		Class<? extends SecurityConfigurer<O, B>> clazz = (Class<? extends SecurityConfigurer<O, B>>) configurer
+				.getClass();
+		synchronized (configurers) {
+			if (buildState.isConfigured()) {
+				throw new IllegalStateException("Cannot apply " + configurer
+						+ " to already built object");
+			}
+			List<SecurityConfigurer<O, B>> configs = allowConfigurersOfSameType ? this.configurers
+					.get(clazz) : null;
+			if (configs == null) {
+				configs = new ArrayList<SecurityConfigurer<O, B>>(1);
+			}
+			configs.add(configurer);
+			this.configurers.put(clazz, configs);
+			if (buildState.isInitializing()) {
+				this.configurersAddedInInitializing.add(configurer);
+			}
+		}
+	}
+```
++ 最终会回到AbstractConfiguredSecurityBuilder的init方法，初始化XXXconfigurer,生成filter
+``` java 
+private void init() throws Exception {
+		Collection<SecurityConfigurer<O, B>> configurers = getConfigurers();
+
+		for (SecurityConfigurer<O, B> configurer : configurers) {
+			configurer.init((B) this);
+		}
+
+		for (SecurityConfigurer<O, B> configurer : configurersAddedInInitializing) {
+			configurer.init((B) this);
+		}
+}
+```

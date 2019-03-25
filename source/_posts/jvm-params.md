@@ -2,8 +2,8 @@
 title: jvm常用参数
 date: 2019-03-25 14:02:59
 tags:
-    -jvm
-    -java
+    - jvm
+    - java
 ---
 
 ### 项目中常用配置

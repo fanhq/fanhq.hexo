@@ -76,3 +76,62 @@ tags:
     Full GC 执行时间不到1s；
     Full GC 执行频率不算频繁，不低于10分钟1次。
   ```
+
+### jvm常用命令
+  + jps
+    jps：显示当前用户的所有java进程的PID  
+    jps -v 3331：显示虚拟机参数  
+    jps -m 3331：显示传递给main()函数的参数  
+    jps -l 3331：显示主类的全路径  
+
+  + jstat 
+    jstat -gc 3331 250 20 ：查询进程2764的垃圾收集情况，每250毫秒查询一次，一共查询20次  
+    jstat -gccause：额外输出上次GC原因  
+    jstat -calss：件事类装载、类卸载、总空间以及所消耗的时间  
+
+  + jmap
+    jmap -histo 3331：查看堆内存(histogram)中的对象数量及大小  
+    jmap -heap 3331：查看java 堆（heap）使用情况  
+    jmap -histo:live 3331：JVM会先触发gc，然后再统计信息，查看堆内存中的对象数量及大小  
+    jmap -dump:format=b,file=heapDump 3331：将内存使用的详细情况输出到文件，之后一般使用其他工具进行分析  
+    
+  + jstack 
+    jstack 3331：查看线程情况  
+    jstack -F 3331：正常输出不被响应时，使用该指令  
+    jstack -l 3331：除堆栈外，显示关于锁的附件信息  
+
+### 常见问题定位过程
+
+1. 使用uptime查看当前load，发现load飙高
+    ```
+    ➜  ~ uptime
+    13:29  up 23:41, 3 users, load averages: 10 10 10
+    ```
+
+2. 使用top命令，查看占用CPU较高的进程ID
+    ```
+    ➜  ~ top
+    PID USER      PR  NI  VIRT  RES  SHR S %CPU %MEM    TIME+  COMMAND
+    1893 admin     20   0 7127m 2.6g  38m S 181.7 32.6  10:20.26 java
+    ```
+    发现PID为1893的进程占用CPU 181%,而且是一个Java进程，基本断定是软件问题
+3. 使用 top命令，查看具体是哪个线程占用率较高
+    ```
+    ➜  ~ top -Hp 1893
+    PID USER      PR  NI  VIRT  RES  SHR S %CPU %MEM    TIME+  COMMAND
+    4519 admin     20   0 7127m 2.6g  38m R 18.6 32.6   0:40.11 java
+    ```
+4. 使用printf命令查看这个线程的16进制
+    ```
+    ➜  ~ printf %x 4519
+    11a7
+    ```
+5. 使用jstack命令查看当前线程正在执行的方法 
+    ```
+    ➜  ~ jstack 1893 |grep -A 200 11a7
+    ```
+6. 使用jmap内存使用的详细情况输出到文件，之后一般使用其他工具进行分    析
+   ```
+   ➜ ~ jmap -dump:format=b,file=heapDump 1893
+   ```
+    + [在线分析地址](http://heaphero.io/index.jsp)

@@ -135,3 +135,4 @@ tags:
    ➜ ~ jmap -dump:format=b,file=heapDump 1893
    ```
     + [在线分析地址](http://heaphero.io/index.jsp)
+    + [在线生成jvm参数](http://xxfox.perfma.com)

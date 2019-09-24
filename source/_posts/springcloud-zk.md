@@ -106,7 +106,7 @@ Spring Cloud 早期版本的注册中心主要使用Eureka，但在2.0过后，N
                 --pom        
        ```
     +  pom依赖
-       ```
+         ```
             <dependencies>
                 <dependency>
                     <groupId>org.springframework.cloud</groupId>
@@ -143,7 +143,7 @@ Spring Cloud 早期版本的注册中心主要使用Eureka，但在2.0过后，N
                     <version>3.5.5</version>
                 </dependency>
             </dependencies>
-       ```
+         ```
 
 ###  附     
 + [项目gitbub地址](https://github.com/fanhq/springcloud-sample)

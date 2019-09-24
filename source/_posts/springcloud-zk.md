@@ -15,99 +15,98 @@ Spring Cloud 早期版本的注册中心主要使用Eureka，但在2.0过后，N
 
 ### 小试牛刀
 
-* maven项目结构  
-```
-springboot-sample  
-    |--springcloud-feign //消费者
-    |--springcloud-zookeeper //服务提供者
-    |--pom
-```
 <!-- more -->
 
+* maven项目结构  
+    ```
+        springboot-sample  
+            |--springcloud-feign //消费者
+            |--springcloud-zookeeper //服务提供者
+            |--pom
+    ```
+
 * 服务提供者
-
      + 项目结构
+        
         ```
-        springcloud-zookeeper
-            |--src
-                |--main
-                    |--java
-                        |--com.fanhq.example
-                            |--config
-                            |--controller
-             --pom        
-       ``` 
+            springcloud-zookeeper
+                |--src
+                    |--main
+                        |--java
+                            |--com.fanhq.example
+                                |--config
+                                |--controller
+                --pom        
+        ```
     +  pom依赖
-       ```
-        <dependencies>
-            <dependency>
-                <groupId>org.springframework.cloud</groupId>
-                <artifactId>spring-cloud-starter-zookeeper-discovery</artifactId>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.apache.curator</groupId>
-                        <artifactId>curator-recipes</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-web</artifactId>
-            </dependency>
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-actuator</artifactId>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.curator</groupId>
-                <artifactId>curator-recipes</artifactId>
-                <version>4.2.0</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>org.apache.zookeeper</groupId>
-                        <artifactId>zookeeper</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.zookeeper</groupId>
-                <artifactId>zookeeper</artifactId>
-                <version>3.5.5</version>
-            </dependency>
-        </dependencies>
-       ```
-       注意：pom依赖这样调整可以根据自己zookeeper的版本进行调整，不建议使用官网的方式
+        ```
+            <dependencies>
+                <dependency>
+                    <groupId>org.springframework.cloud</groupId>
+                    <artifactId>spring-cloud-starter-zookeeper-discovery</artifactId>
+                    <exclusions>
+                        <exclusion>
+                            <groupId>org.apache.curator</groupId>
+                            <artifactId>curator-recipes</artifactId>
+                        </exclusion>
+                    </exclusions>
+                </dependency>
+                <dependency>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-web</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-actuator</artifactId>
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.curator</groupId>
+                    <artifactId>curator-recipes</artifactId>
+                    <version>4.2.0</version>
+                    <exclusions>
+                        <exclusion>
+                            <groupId>org.apache.zookeeper</groupId>
+                            <artifactId>zookeeper</artifactId>
+                        </exclusion>
+                    </exclusions>
+                </dependency>
+                <dependency>
+                    <groupId>org.apache.zookeeper</groupId>
+                    <artifactId>zookeeper</artifactId>
+                    <version>3.5.5</version>
+                </dependency>
+            </dependencies>
+        ```
+         - 注意：pom依赖这样调整可以根据自己zookeeper的版本进行调整，不建议使用官网的方式
     + Java配置
-      ```
-        @Component
-        public class RegistrationConfig {
+        ``` java
+            @Component
+            public class RegistrationConfig {
 
-            @Autowired
-            private AbstractAutoServiceRegistration serviceRegistration;
+                @Autowired
+                private AbstractAutoServiceRegistration serviceRegistration;
 
-            @EventListener(WebServerInitializedEvent.class)
-            public void register(WebServerInitializedEvent event) {
-                serviceRegistration.bind(event);
+                @EventListener(WebServerInitializedEvent.class)
+                public void register(WebServerInitializedEvent event) {
+                    serviceRegistration.bind(event);
+                }
             }
-        }
-      ```
-    注意：这里用的最新的springcloud版本进行踩坑，按照官网的例子，springcloud不会去zookeeper注册服务，通过阅读源码添加以上配置触发注册的事件
-
+        ```
+        - 注意：这里用的最新的springcloud版本进行踩坑，按照官网的例子，springcloud不会去zookeeper注册服务，通过阅读源码添加以上配置触发注册的事件
 * 服务消费者(feign)
-
     + 项目结构
         ```
-        springcloud-feign
-            |--src
-                |--main
-                    |--java
-                        |--com.fanhq.example
-                            |--client
-                            |--consumer
-             --pom        
+            springcloud-feign
+                |--src
+                    |--main
+                        |--java
+                            |--com.fanhq.example
+                                |--client
+                                |--consumer
+                --pom        
        ``` 
     +  pom依赖
-       ```
+       ``` 
             <dependencies>
                 <dependency>
                     <groupId>org.springframework.cloud</groupId>
@@ -145,7 +144,6 @@ springboot-sample
                 </dependency>
             </dependencies>
        ```
-
 
 ###  附     
 + [项目gitbub地址](https://github.com/fanhq/springcloud-sample)

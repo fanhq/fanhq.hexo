@@ -104,9 +104,9 @@ Spring Cloud 早期版本的注册中心主要使用Eureka，但在2.0过后，N
                                 |--client
                                 |--consumer
                 --pom        
-       ``` 
+       ```
     +  pom依赖
-       ``` 
+       ```
             <dependencies>
                 <dependency>
                     <groupId>org.springframework.cloud</groupId>

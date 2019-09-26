@@ -78,7 +78,7 @@ flume 作为 cloudera 开发的实时日志收集系统，受到了业界的认�
 
     ```
 
-+ 配置文件
++ 启动脚本
     ```
         ./bin/flume-ng agent --conf ./conf --name agent --conf-file ./conf/flume-hdfs.example -Dflume.root.logger=INFO,console >log.log 2>&1 &
     ```

@@ -174,16 +174,16 @@ solr-7.5.0.zip
 
    * Search for a Single Term  
    根据关键字foundation进行搜索
-   ```
-    curl "http://localhost:8983/solr/techproducts/select?q=foundation"
-   ```
+    ```
+      curl "http://localhost:8983/solr/techproducts/select?q=foundation"
+    ```
    * Field Searches  
    搜索字段cat并等于electronics的文件
-   ```
-    curl "http://localhost:8983/solr/techproducts/select?q=cat:electronics"
-   ```
+    ```
+      curl "http://localhost:8983/solr/techproducts/select?q=cat:electronics"
+    ```
    * Phrase Search   
    搜索包含CAS latency的文件
     ```
-    curl "http://localhost:8983/solr/techproducts/select?q=\"CAS+latency\""
-   ```
+      curl "http://localhost:8983/solr/techproducts/select?q=\"CAS+latency\""
+    ```

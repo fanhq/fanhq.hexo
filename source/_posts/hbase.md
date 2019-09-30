@@ -109,7 +109,6 @@ Hbase集群依赖hadoop，zookeeper，安装Hbase集群前首先要准备好hado
             ./bin/start-hbase.sh
         ```
     * 查看相关进程是否正常  
-        
         1. hadoop01
         ``` shell
             [app@hadoop01 hbase]$ jps

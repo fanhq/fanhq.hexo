@@ -13,13 +13,11 @@ HBase是一种构建在HDFS之上的分布式、面向列的存储系统。HBase
 + HBase以表的形式存储数据，表有行和列组成，列划分为若干个列族/列簇(column family)
 
 + 表结构  
-    Row Key | column-family1 | column-family2 
-    -|-|-
-    key1 | f1:列簇1第1个字段;f2:列簇1第2个字段 |  f1:列簇2第1个字段;f2:列簇2第2个字段 
-    key2 | f1:列簇1第1个字段,;2:列簇1第2个字段 |  f1:列簇2第1个字段;f2:列簇2第2个字段
-<!-- more -->
-
+    |Row Key|column-family1|column-family2|
+    |key1|f1:列簇1第1个字段;f2:列簇1第2个字段|f1:列簇2第1个字段;f2:列簇2第2个字段| 
+    |key2|f1:列簇1第1个字段,;2:列簇1第2个字段|f1:列簇2第1个字段;f2:列簇2第2个字段|
 ### HBase集群整体架构
+<!-- more -->
 
 + 架构图
     ![](/images/e2ea998c0979d447310785c2b98f48b4.png)
@@ -42,7 +40,6 @@ Hbase集群依赖hadoop，zookeeper，安装Hbase集群前首先要准备好hado
 
 + 服务器列表
     IP | host | 服务  
-    -|-| -
     10.19.3.194 | hadoop01 | HMaster
     10.19.3.195 | hadoop02 | HRegionServer
     10.19.3.196 | hadoop03 | HRegionServer 
@@ -60,13 +57,13 @@ Hbase集群依赖hadoop，zookeeper，安装Hbase集群前首先要准备好hado
 + 安装步骤
 
     * 进入安装目录
-        ``` shell
+        ```
             [app@hadoop01 hbase]$ pwd
             /usr/local/hbase
             [app@hadoop01 hbase]$ ls
             bin  CHANGES.md  conf  hbase-webapps  LEGAL  lib  LICENSE.txt  logs  NOTICE.txt  README.txt  RELEASENOTES.md
             [app@hadoop01 hbase]$ 
-        ```        
+        ```
     * 编辑conf目录下的hbase-site.xml
         ```
             <configuration>

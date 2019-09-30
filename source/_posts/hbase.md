@@ -110,37 +110,35 @@ Hbase集群依赖hadoop，zookeeper，安装Hbase集群前首先要准备好hado
         ```
     * 查看相关进程是否正常  
         1. hadoop01
-        ``` shell
-            [app@hadoop01 hbase]$ jps
-            24113 SecondaryNameNode
-            23878 NameNode
-            9398 Jps
-            28685 HMaster
-            24335 ResourceManager
-            [app@hadoop01 hbase]$ 
-        ```
+            ``` shell
+                [app@hadoop01 hbase]$ jps
+                24113 SecondaryNameNode
+                23878 NameNode
+                9398 Jps
+                28685 HMaster
+                24335 ResourceManager
+                [app@hadoop01 hbase]$ 
+            ```
         2. hadoop02 
-        ```
-            [app@hadoop02 hbase]$ jps
-            20049 Jps
-            16779 DataNode
-            9308 HRegionServer
-            16910 NodeManager
-            [app@hadoop02 hbase]$ 
-        ```
+            ```
+                [app@hadoop02 hbase]$ jps
+                20049 Jps
+                16779 DataNode
+                9308 HRegionServer
+                16910 NodeManager
+                [app@hadoop02 hbase]$ 
+            ```
         3. hadoop03
-        ```
-            [app@hadoop03 hbase]$ jps
-            20049 Jps
-            16779 DataNode
-            9308 HRegionServer
-            16910 NodeManager
-            [app@hadoop03 hbase]$ 
-        ```
+            ```
+                [app@hadoop03 hbase]$ jps
+                20049 Jps
+                16779 DataNode
+                9308 HRegionServer
+                16910 NodeManager
+                [app@hadoop03 hbase]$ 
+            ```
     * 可以通过访问http://10.19.3.194:16010查看集群信息
-
 + 验证集群(java代码)
-
     * 引入pom依赖
         ```
             <dependency>
@@ -159,7 +157,6 @@ Hbase集群依赖hadoop，zookeeper，安装Hbase集群前首先要准备好hado
                 <version>2.2.1</version>
             </dependency>
         ```
-
     * 代码判断是否存在表test_table
     ``` java
         Configuration configuration = HBaseConfiguration.create();
@@ -172,12 +169,9 @@ Hbase集群依赖hadoop，zookeeper，安装Hbase集群前首先要准备好hado
         admin.close();
         connection.close();
     ```
-
     * 控制台输出
     ```
         false
     ```
-
 ###  附      
-    
 + [Hbase官网地址](https://hbase.apache.org/)       

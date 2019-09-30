@@ -88,15 +88,12 @@ Hbase集群依赖hadoop，zookeeper，安装Hbase集群前首先要准备好hado
                 </property>
 
             </configuration>
-
         ```
-
     * 在conf目录下的hbase-env.sh末尾增加配置
         ```
             export JAVA_HOME=/opt/jdk1.8.0_131
             export HBASE_MANAGES_ZK=false
         ```
-    
     * 编辑conf目录下的regionservers
         ```
             hadoop02

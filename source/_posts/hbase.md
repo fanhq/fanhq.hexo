@@ -158,20 +158,20 @@ Hbase集群依赖hadoop，zookeeper，安装Hbase集群前首先要准备好hado
             </dependency>
         ```
     * 代码判断是否存在表test_table
-    ``` java
-        Configuration configuration = HBaseConfiguration.create();
-        configuration.set("hbase.zookeeper.quorum", "10.19.3.194,10.19.3.195,10.19.3.196");
-        configuration.set("hbase.zookeeper.property.clientPort", "2181");
-        Connection connection = ConnectionFactory.createConnection(configuration);
-        Admin admin = connection.getAdmin();
-        TableName tableName = TableName.valueOf("test_table");
-        System.out.println(admin.tableExists(tableName));
-        admin.close();
-        connection.close();
-    ```
+        ``` java
+            Configuration configuration = HBaseConfiguration.create();
+            configuration.set("hbase.zookeeper.quorum", "10.19.3.194,10.19.3.195,10.19.3.196");
+            configuration.set("hbase.zookeeper.property.clientPort", "2181");
+            Connection connection = ConnectionFactory.createConnection(configuration);
+            Admin admin = connection.getAdmin();
+            TableName tableName = TableName.valueOf("test_table");
+            System.out.println(admin.tableExists(tableName));
+            admin.close();
+            connection.close();
+        ```
     * 控制台输出
-    ```
-        false
-    ```
+        ```
+            false
+        ```
 ###  附      
 + [Hbase官网地址](https://hbase.apache.org/)       

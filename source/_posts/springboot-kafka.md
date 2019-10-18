@@ -38,6 +38,7 @@ Apache Kafka是一个分布式的发布-订阅消息系统，能够支撑海量�
     ``` java
 
         @Component
+        @Slf4j
         public class Consumer {
             @KafkaListener(topics = "topic_test")
             public void listener(ConsumerRecord<String, String> record) {
@@ -194,7 +195,7 @@ Apache Kafka是一个分布式的发布-订阅消息系统，能够支撑海量�
 
         }
     ```
-### 自定义配置kafka
+### 自定义配置集成kafka
 按照springboot的快速接入，可以在平时的开发中快乐的使用kafka，应对大部分场景。如果项目中有多个kafka，则需要自定义配置，多样化使用kafka
 
 + pom

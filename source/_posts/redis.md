@@ -17,4 +17,38 @@ Redis 的集合相当于 Java 语言里面的 HashSet，它内部的键值对是
 
 ### 应用场景
 + 分布式锁
-
+    - 加锁  
+    ```java
+        public boolean tryLock() {
+            //随机生成字符串
+            String uuid= UUID.randomUUID().toString();
+            //获取redis原始链接
+            Jedis jedis = redisManager.getJedis();
+            //使用setnx命令请求写值，并设置有效时间
+            String ret=jedis.set(KEY,uuid,"NX","PX",1000);
+            if("OK".equals(ret)){
+                //供给unlock时从threadLocal获取此值,ThreadLocal完成数据共享
+                local.set(uuid);
+                return  true;
+            }
+            return false;
+        }
+    ```
+    - 解锁
+    ```java
+        public void unlock() {
+            //读取lua脚本
+            String script= FileUtils.readFileByLines("lua脚本路径");
+            Jedis jedis=redisManager.getJedis();
+            //链接redis执行Lua脚本,value值无法从unlock方法入参了，因此用threadLocal来获取
+            jedis.eval(script, Arrays.asList(KEY),Arrays.asList(local.get()));
+        }  
+    ```
+    - lua脚本
+    ```lua
+        if redis.call("get",KEYS[1])==ARGV[1] then
+        return redis.call("del",KEYS[1)
+        else
+        return 0
+        end
+    ```

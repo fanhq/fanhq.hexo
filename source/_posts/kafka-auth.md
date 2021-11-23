@@ -1,5 +1,5 @@
 ---
-title: kafka鉴权授权
+title: kafka权限管理
 date: 2021-11-23 14:25:33
 tags:
     - kakka

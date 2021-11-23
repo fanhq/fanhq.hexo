@@ -21,11 +21,11 @@ tags:
 + 2.8.0
 + [下载地址](https://apache.claz.org/kafka/2.8.0/kafka_2.13-2.8.0.tgz)
 
+<!-- more -->
+
 ### zookeeper安装版本
 + 3.6.3
 + [下载地址](https://apache.claz.org/zookeeper/zookeeper-3.6.3/apache-zookeeper-3.6.3-bin.tar.gz)
-
-<!-- more -->
 
 ## 安装步骤（默认熟悉kafka的安装）
 + 按照上述要求，官网下载kafka、zookeeper对应的版本，并提前安装zookeeper
@@ -103,7 +103,7 @@ exec $base_dir/kafka-run-class.sh $EXTRA_ARGS -Djava.security.auth.login.config=
     ```
     
     - group授权
-    
+
     ```
     ./kafka-acls.sh --authorizer-properties zookeeper.connect=localhost:2181 --add --allow-principal User:Alice  --operation Read --operation Write --group grp001
     ```

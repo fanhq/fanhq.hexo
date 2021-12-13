@@ -97,17 +97,13 @@ exec $base_dir/kafka-run-class.sh $EXTRA_ARGS -Djava.security.auth.login.config=
     kafkaAdmin提供了丰富的管理功能，可以自行探索
 + 用户授权
     - topic授权
-
     ```
      ./kafka-acls.sh --authorizer-properties zookeeper.connect=localhost:2181 --add --allow-principal User:Alice  --operation Read --operation Write --topic test001
     ```
-    
     - group授权
-
     ```
      ./kafka-acls.sh --authorizer-properties zookeeper.connect=localhost:2181 --add --allow-principal User:Alice  --operation Read --operation Write --group grp001
     ```
-
     同样可以通过KafkaAdmin管理，这里就不再进行展示
 
 ## 客服端使用示例

@@ -99,13 +99,13 @@ exec $base_dir/kafka-run-class.sh $EXTRA_ARGS -Djava.security.auth.login.config=
     - topic授权
 
     ```
-    ./kafka-acls.sh --authorizer-properties zookeeper.connect=localhost:2181 --add --allow-principal User:Alice  --operation Read --operation Write --topic test001
+     ./kafka-acls.sh --authorizer-properties zookeeper.connect=localhost:2181 --add --allow-principal User:Alice  --operation Read --operation Write --topic test001
     ```
     
     - group授权
 
     ```
-    ./kafka-acls.sh --authorizer-properties zookeeper.connect=localhost:2181 --add --allow-principal User:Alice  --operation Read --operation Write --group grp001
+     ./kafka-acls.sh --authorizer-properties zookeeper.connect=localhost:2181 --add --allow-principal User:Alice  --operation Read --operation Write --group grp001
     ```
 
     同样可以通过KafkaAdmin管理，这里就不再进行展示
@@ -115,33 +115,33 @@ exec $base_dir/kafka-run-class.sh $EXTRA_ARGS -Djava.security.auth.login.config=
 +  依赖引入
 
 ```
-<dependency>
+ <dependency>
     <groupId>org.apache.kafka</groupId>
     <artifactId>kafka-clients</artifactId>
     <version>2.8.0</version>
-</dependency>
+ </dependency>
 
 ```
 
 + 代码样例
 
 ```
-        Properties props = new Properties();
-        props.setProperty("bootstrap.servers", "127.0.0.1:9093");
-        props.setProperty("group.id", "grp001");
-        props.setProperty("enable.auto.commit", "true");
-        props.setProperty("auto.commit.interval.ms", "1000");
-        props.setProperty("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-        props.setProperty("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
-        props.put("sasl.jaas.config", "org.apache.kafka.common.security.scram.ScramLoginModule required username=\"alice\" password=\"xxxxxx\";");
-        props.put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, "SASL_PLAINTEXT");
-        props.put(SaslConfigs.SASL_MECHANISM, "SCRAM-SHA-512");
-        KafkaConsumer<String, String> consumer = new KafkaConsumer<>(props);
-        consumer.subscribe(Arrays.asList("test001"));
-        while (true) {
-            ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(1000));
-            for (ConsumerRecord<String, String> record : records){
-                System.out.printf("partition =%d offset = %d, key = %s, value = %s%n", record.partition(), record.offset(), record.key(), record.value());
-            }
+    Properties props = new Properties();
+    props.setProperty("bootstrap.servers", "127.0.0.1:9093");
+    props.setProperty("group.id", "grp001");
+    props.setProperty("enable.auto.commit", "true");
+    props.setProperty("auto.commit.interval.ms", "1000");
+    props.setProperty("key.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+    props.setProperty("value.deserializer", "org.apache.kafka.common.serialization.StringDeserializer");
+    props.put("sasl.jaas.config", "org.apache.kafka.common.security.scram.ScramLoginModule required username=\"alice\" password=\"xxxxxx\";");
+    props.put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG, "SASL_PLAINTEXT");
+    props.put(SaslConfigs.SASL_MECHANISM, "SCRAM-SHA-512");
+    KafkaConsumer<String, String> consumer = new KafkaConsumer<>(props);
+    consumer.subscribe(Arrays.asList("test001"));
+    while (true) {
+        ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(1000));
+        for (ConsumerRecord<String, String> record : records){
+            System.out.printf("partition =%d offset = %d, key = %s, value = %s%n", record.partition(), record.offset(), record.key(), record.value());
         }
+    }
 ```
